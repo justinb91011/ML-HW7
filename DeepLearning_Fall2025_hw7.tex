@@ -1,0 +1,78 @@
+\documentclass[a4paper]{article}
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{enumitem}
+
+\newcommand\fix[1]{\textcolor{red}{#1}}
+
+\title{Homework 7\\
+600.482/682 Deep Learning\\
+Fall 2025}
+
+\begin{document}
+\maketitle
+
+
+\centerline{\textbf{Due Wednesday Dec 3 11:59 pm EST}}
+
+\noindent \textbf{Instructions.} Please submit 1) a single zip file containing your Jupyter Notebook and PDF of your Jupyter Notebook to ``Homework 7 - Notebook'' and 2) your written report (LaTeX generated PDF) to ``Homework 7 - Report'' on Gradescope (Entry Code: \textbf{VWJRB3}) \\
+
+\noindent \emph{Important:} You must program this homework using the PyTorch framework. We highly recommend using Google Colaboratory. If you don't have local GPU access, you should port the provided Python scripts to Colaboratory and enable GPU in your environment (Edit/Notebook Settings). \\
+
+% \noindent \emph{Important:} Training should converge in less than 30 minutes for T4 GPU. If your model does not make significant updates in that time, you should re-examine your code. Either way, this is a reminder to start the assignment early.
+
+\begin{enumerate}
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=0.5\linewidth]{transformer.png}
+%     \caption{Caption}
+%     \label{fig:placeholder}
+% \end{figure}
+% \item Consider 
+
+% Problem 2
+\item \textit{TinyGPT}. Consider the provided Jupyter notebook \texttt{Homework7.ipynb}. You will implement a minimal version of a \textit{Generative Pretrained Transformer (GPT)} to understand how Transformers model sequential data through self-attention, normalization, and next-token prediction. Please implement the following \texttt{forward} functions in the notebook marked as \texttt{\# TODO}.
+
+\begin{enumerate}[label=\roman*., ref=(\roman*)]
+        \item \label{itm:selfatt} \textit{Self-Attention Head.} Compute the normalized similarity score between Query and Key vectors, attention weights (e.g. \texttt{softmax}), and apply dropout. Apply the attention weights to the Value vectors to produce the output.
+        \item \label{itm:mha} \textit{Multi-Head Attention.} Concatenate Self-Attention heads implemented in~\ref{itm:selfatt}.
+        \item \label{itm:block} \textit{Transformer Block.} Normalize embeddings and assemble the residual paths from the Multi-Head Attention block~\ref{itm:mha} and the FeedForward MLP.
+        \item \textit{TinyGPT Model.} Compute token and positional embeddings, logits (using the transformer blocks~\ref{itm:block}), and loss.
+\end{enumerate}
+
+\noindent Considering the above implementation, please answer the following questions:
+\begin{enumerate}
+    \item Draw a computational graph showing the flow of information from input to output, clearly annotating the blocks described above.
+    \item Consider the following equation for the attention weights $A$ from the query ($Q$) and value ($V$) vectors. 
+    \begin{equation}
+        A = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)
+    \end{equation}
+    What is the purpose of dividing by $\sqrt{d_k}$? What happens to the softmax function if we remove this division?
+    \item \textit{Causal Masking}.
+    \begin{enumerate}
+        \item Train until convergence and attach your loss curve. Generate a sample output (approx. 500 tokens) and include a screenshot of the results.
+        \item Now, include a \textbf{causal mask} before computing the attention weights so that for each position, only current and previous tokens contribute to its attention scores. Retrain until convergence, attach your loss curve, and generate a new sample including a screenshot of the results.
+        \item Compare your results before and after including the causal mask. What do you observe in the loss curve and generated text? How does the causal mask affect model training and prediction quality?
+    \end{enumerate}
+    \item Why is it important to normalize the embeddings (e.g. using Layer Normalization) in the Transformer block? What would happen if we do not use this normalization?
+\end{enumerate}
+
+% Problem 2
+\item \textit{Optional - for bonus credit}. Consider the \texttt{tiny\_shakespeare.txt} corpus used to train your \textit{GPT} which is approximately 1M characters/200k words. In this exercise, we will explore fine-tuning a GPT model on a custom dataset. Please select your own article or essay with \textbf{5,000 - 15,000} characters and complete the following questions.
+    \begin{enumerate}
+        \item \textit{Dataset Preprocessing.} Convert your selected text into a single \texttt{UTF-8 .txt} file, removing non-text artifacts and unrelated content. Describe (if any) the steps you used to clean the data. \\
+        Describe your selected text. How many characters are there, and what is the tone of the text (e.g. casual/personal, academic, news, etc.)? Summarize the information content in 1-2 sentences.
+        \item \textit{GPT2 Inference}. Use a sample input phrase from your selected text to prompt the GPT2 model. Include a screenshot of both the input phrase and the result below.
+        \item \textit{Fine-tuning.} Using the GPT2 model, fine-tune with your selected text. Attach the loss curve and generated text sample with the same input phrase and the fine-tuned model.
+        \item \textit{Interpret.} Compare your results before and after fine-tuning. How did the fine-tuned TinyGPT text style, vocabulary, or tone change to reflect your dataset?
+    \end{enumerate}
+	    
+\end{enumerate}
+
+\end{document}
